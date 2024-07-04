@@ -1,0 +1,17 @@
+[
+  {
+    "modid": "${modid}",
+    "name": "Hitboxes",
+    "description": "Hitbox mod",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "updateUrl": "",
+    "authorList": [
+      "ApplePies"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

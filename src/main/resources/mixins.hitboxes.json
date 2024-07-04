@@ -1,0 +1,14 @@
+{
+  "package": "nodomain.applepies.hitboxes.mixin",
+  "refmap": "mixins.hitboxes.refmap.json",
+  "minVersion": "0.7",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "EntityArrowMixin",
+    "EntityFishHookMixin",
+    "EntityThrowableMixin",
+    "MixinRenderManager",
+    "NetHandlerPlayClientMixin",
+    "ArrowStateAccessor"
+  ]
+}
