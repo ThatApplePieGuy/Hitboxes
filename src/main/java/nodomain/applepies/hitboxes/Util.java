@@ -38,18 +38,33 @@ public final class Util {
     public static boolean canRenderNametag(EntityPlayer player) {
         Minecraft mc = Minecraft.getMinecraft();
 
+        boolean visible = true;
         Team team = player.getTeam();
         Team ownTeam = mc.thePlayer.getTeam();
 
         if (team != null) {
             Team.EnumVisible teamVisibility = team.getNameTagVisibility();
             switch (teamVisibility) {
-                case ALWAYS: {break;}
-                case NEVER: {return false;}
-                case HIDE_FOR_OTHER_TEAMS: {if (!(ownTeam == null || team.isSameTeam(ownTeam))) return false;}
-                case HIDE_FOR_OWN_TEAM: {if (!(ownTeam == null || !team.isSameTeam(ownTeam))) return false;}
+                case ALWAYS: {
+                    visible = true;
+                    break;
+                }
+                case NEVER: {
+                    visible = false;
+                    break;
+                }
+                case HIDE_FOR_OTHER_TEAMS: {
+                    visible = !(ownTeam == null || team.isSameTeam(ownTeam));
+                    break;
+                }
+                case HIDE_FOR_OWN_TEAM: {
+                    visible = !(ownTeam == null || !team.isSameTeam(ownTeam));
+                    break;
+                }
             }
         }
+
+        if (!visible) return false;
 
         double distance = player.getDistanceSqToEntity(mc.thePlayer);
         double nametagDistance = player.isSneaking() ? 32 * 32 : 64 * 64;
