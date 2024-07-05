@@ -54,11 +54,11 @@ public final class Util {
                     break;
                 }
                 case HIDE_FOR_OTHER_TEAMS: {
-                    visible = !(ownTeam == null || team.isSameTeam(ownTeam));
+                    visible = ownTeam == null || team.isSameTeam(ownTeam);
                     break;
                 }
                 case HIDE_FOR_OWN_TEAM: {
-                    visible = !(ownTeam == null || !team.isSameTeam(ownTeam));
+                    visible = ownTeam == null || !team.isSameTeam(ownTeam);
                     break;
                 }
             }
