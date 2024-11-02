@@ -2,7 +2,6 @@ package nodomain.applepies.hitboxes.mixin;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.world.World;
 import nodomain.applepies.hitboxes.ProjectileAccessor;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
@@ -14,12 +13,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
+import nodomain.applepies.hitboxes.Util;
 import nodomain.applepies.hitboxes.config.Config;
 import nodomain.applepies.hitboxes.config.PlayerColorModes;
 import nodomain.applepies.hitboxes.config.ProjectileColorModes;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -31,8 +30,6 @@ import static org.lwjgl.opengl.GL11.GL_LINE_STRIP;
 
 @Mixin(RenderManager.class)
 public class MixinRenderManager {
-    @Shadow
-    public World worldObj;
 
     @Inject(method = "setDebugBoundingBox(Z)V", at = @At("HEAD"))
     private void hitboxes$rememberState(boolean debugBoundingBoxIn, CallbackInfo ci) {
@@ -84,33 +81,7 @@ public class MixinRenderManager {
 
     @Unique
     private void hitboxes$drawHitbox(Entity entity, double x, double y, double z) {
-        int color;
-
-        if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entity;
-            color = hitboxes$getPlayerColor(player);
-
-        } else if (entity instanceof ProjectileAccessor) {
-            color = Config.projectileColor;
-            if (Config.projectileColorMode == ProjectileColorModes.SHOOTER.ordinal()) {
-                ProjectileAccessor pa = (ProjectileAccessor) entity;
-                if (pa.hitboxes$hasColor()) {
-                    color = pa.hitboxes$getColor();
-                } else if (pa.hitboxes$hasOwner()) {
-                    EntityPlayer owner = worldObj.getPlayerEntityByUUID(pa.hitboxes$getOwner());
-                    if (owner != null) {
-                        color = hitboxes$getPlayerColor(owner);
-                        pa.hitboxes$setColor(color);
-                    }
-                }
-            }
-
-        } else if (entity instanceof EntityLiving) {
-            color = Config.mobColor;
-
-        } else {
-            color = Config.otherColor;
-        }
+        int color = hitboxes$getEntityColor(entity);
 
         AxisAlignedBB aabb0 = entity.getEntityBoundingBox();
         AxisAlignedBB aabb = new AxisAlignedBB(aabb0.minX - entity.posX + x, aabb0.minY - entity.posY + y, aabb0.minZ - entity.posZ + z, aabb0.maxX - entity.posX + x, aabb0.maxY - entity.posY + y, aabb0.maxZ - entity.posZ + z);
@@ -140,6 +111,28 @@ public class MixinRenderManager {
     }
 
     @Unique
+    private int hitboxes$getEntityColor(Entity entity) {
+        int color;
+
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entity;
+            color = hitboxes$getPlayerColor(player);
+
+        } else if (entity instanceof ProjectileAccessor) {
+            ProjectileAccessor pa = (ProjectileAccessor) entity;
+            color = hitboxes$getProjectileColor(pa);
+
+        } else if (entity instanceof EntityLiving) {
+            color = Config.mobColor;
+
+        } else {
+            color = Config.otherColor;
+        }
+
+        return color;
+    }
+
+    @Unique
     private int hitboxes$getPlayerColor(EntityPlayer player) {
         int color = Config.playerColor;
 
@@ -157,6 +150,24 @@ public class MixinRenderManager {
             color = getPingHex(player, color);
         }
 
+        return color;
+    }
+
+    @Unique
+    private int hitboxes$getProjectileColor(ProjectileAccessor pa) {
+        int color = Config.projectileColor;
+
+        if (Config.projectileColorMode == ProjectileColorModes.SHOOTER.ordinal()) {
+            if (pa.hitboxes$hasColor()) {
+                color = pa.hitboxes$getColor();
+            } else if (pa.hitboxes$hasOwner()) {
+                Entity owner = Util.getEntityByUUID(pa.hitboxes$getOwner());
+                if (owner != null) {
+                    color = hitboxes$getEntityColor(owner);
+                    pa.hitboxes$setColor(color);
+                }
+            }
+        }
         return color;
     }
 }

@@ -29,7 +29,7 @@ loom {
             // If you don't want mixins, remove these lines
             property("mixin.debug", "true")
             // arg("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
-            arg("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
+            arg("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
         }
     }
     runConfigs {
@@ -63,7 +63,6 @@ repositories {
     maven("https://repo.spongepowered.org/maven/")
     // If you don't want to log in with your real minecraft account, remove this line
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
-    maven("https://repo.essential.gg/repository/maven-public")
 }
 
 val shadowImpl: Configuration by configurations.creating {
@@ -76,18 +75,14 @@ dependencies {
     forge("net.minecraftforge:forge:1.8.9-11.15.1.2318-1.8.9")
 
     // If you don't want mixins, remove these lines
-    // shadowImpl("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
-    //     isTransitive = false
-    // }
+    shadowImpl("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+        isTransitive = false
+    }
     compileOnly("org.spongepowered:mixin:0.8.5-SNAPSHOT")
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT")
 
     // If you don't want to log in with your real minecraft account, remove this line
     runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.2")
-
-    compileOnly("gg.essential:essential-1.8.9-forge:4955+g395141645")
-    shadowImpl("gg.essential:loader-launchwrapper:1.1.3")
-
 }
 
 // Tasks:
@@ -104,7 +99,7 @@ tasks.withType(Jar::class) {
 
         // If you don't want mixins, remove these lines
         // this["TweakClass"] = "org.spongepowered.asm.launch.MixinTweaker"
-        this["TweakClass"] = "gg.essential.loader.stage0.EssentialSetupTweaker"
+        this["TweakClass"] = "org.spongepowered.asm.launch.MixinTweaker"
         this["MixinConfigs"] = "mixins.$modid.json"
     }
 }

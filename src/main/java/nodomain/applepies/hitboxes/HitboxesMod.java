@@ -13,7 +13,7 @@ import nodomain.applepies.hitboxes.config.ConfigCommand;
 
 import static nodomain.applepies.hitboxes.Util.*;
 
-@Mod(modid = "hitboxes", version="0.0.1", useMetadata=true, clientSideOnly=true)
+@Mod(modid = "hitboxes", version="1.0.1", useMetadata=true, clientSideOnly=true)
 public class HitboxesMod {
     public static GuiScreen nextScreen = null;
 

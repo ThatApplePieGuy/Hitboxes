@@ -4,9 +4,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Team;
+
+import java.util.UUID;
 
 public final class Util {
 
@@ -100,6 +104,32 @@ public final class Util {
         }
 
         return color;
+    }
+
+    public static EntityLivingBase getNearestLivingEntity(Entity searchEntity) {
+        EntityLivingBase nearestEntity = null;
+        float nearestDistance = 4;
+
+        for (Entity entity : mc.theWorld.loadedEntityList) {
+            if (!(entity instanceof EntityLivingBase)) continue;
+            if (entity == searchEntity) continue;
+
+            float distance = entity.getDistanceToEntity(searchEntity);
+            if (distance < nearestDistance) {
+                nearestEntity = (EntityLivingBase) entity;
+                nearestDistance = distance;
+            }
+        }
+
+        return nearestEntity;
+    }
+
+    public static Entity getEntityByUUID(UUID uuid) {
+        for (Entity entity : mc.theWorld.loadedEntityList) {
+            if (!uuid.equals(entity.getUniqueID())) continue;
+            return entity;
+        }
+        return null;
     }
 
 }

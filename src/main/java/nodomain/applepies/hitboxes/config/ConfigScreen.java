@@ -2,6 +2,7 @@ package nodomain.applepies.hitboxes.config;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiSlider;
 
 import static nodomain.applepies.hitboxes.Util.*;
@@ -144,7 +145,7 @@ public class ConfigScreen extends GuiScreen {
             button.displayString = "Hitbox: " + enabled(Config.projectileShowHitbox);
 
         } else if (button == projectileShowLook) {
-            Config.projectileShowHitbox = !Config.projectileShowHitbox;
+            Config.projectileShowLook = !Config.projectileShowLook;
             button.displayString = "Look Vector: " + enabled(Config.projectileShowHitbox);
 
         } else if (button == projectileGrounded) {
@@ -195,10 +196,19 @@ public class ConfigScreen extends GuiScreen {
 
         int row = height / 2 - 84;
 
-        drawCenteredString(fontRendererObj, "Players", col[0], row, 0xFFFFFF);
-        drawCenteredString(fontRendererObj, "Projectiles", col[1], row, 0xFFFFFF);
-        drawCenteredString(fontRendererObj, "Mobs", col[2], row, 0xFFFFFF);
-        drawCenteredString(fontRendererObj, "Others", col[3], row, 0xFFFFFF);
+        drawCenteredString(fontRendererObj, "Players", col[0], row - 20, 0xFFFFFF);
+        drawCenteredString(fontRendererObj, "Projectiles", col[1], row - 20, 0xFFFFFF);
+        drawCenteredString(fontRendererObj, "Mobs", col[2], row - 20, 0xFFFFFF);
+        drawCenteredString(fontRendererObj, "Others", col[3], row - 20, 0xFFFFFF);
+
+        mc.getTextureManager().bindTexture(new ResourceLocation("textures/entity/steve.png"));
+        drawModalRectWithCustomSizedTexture(col[0] - 8, row - 8, 16, 16, 16, 16, 128, 128);
+        mc.getTextureManager().bindTexture(new ResourceLocation("textures/items/arrow.png"));
+        drawModalRectWithCustomSizedTexture(col[1] - 8, row - 8, 0, 0, 16, 16, 16, 16);
+        mc.getTextureManager().bindTexture(new ResourceLocation("textures/entity/creeper/creeper.png"));
+        drawModalRectWithCustomSizedTexture(col[2] - 8, row - 8, 16, 16, 16, 16, 128, 64);
+        mc.getTextureManager().bindTexture(new ResourceLocation("textures/items/minecart_normal.png"));
+        drawModalRectWithCustomSizedTexture(col[3] - 8, row - 8, 0, 0, 16, 16, 16, 16);
 
         drawRect(col[0] - 58, row + 12, col[0] + 58, row + 26, 0xFF000000 | Config.playerColor);
         drawRect(col[1] - 58, row + 12, col[1] + 58, row + 26, 0xFF000000 | Config.projectileColor);
